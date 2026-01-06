@@ -35,6 +35,7 @@ The Consistency Drop: Without immediate rewards, long-term habits are hard to ma
 
 
 🛠️ Technical Stack
+
 Frontend: HTML5, CSS3 (Modern Flex/Grid), Vanilla JavaScript (ES6+).
 
 Backend: Firebase Firestore for real-time cloud storage.
@@ -43,6 +44,7 @@ Authentication: Firebase Auth with secure email verification flows.
 
 
 🧭 The New User Experience (Onboarding)
+
 I designed Achieve-mate to be intuitive from the very first click:
 
 Interactive Welcome Guide: New users are greeted with a dedicated overlay explaining the core ecosystem.
@@ -52,13 +54,20 @@ Morning Prompt: To build discipline, the app checks every morning if you've set 
 Safe Data Loading: A merge strategy ensures that even when I update the app features, your existing progress is never lost.
 
 
+
 📂 Project Structure
 
+
 ├── index.html        # Core Dashboard & Modal UI
+|
 ├── style.css         # Responsive Dark-themed Design
+|
 ├── app.js            # XP System & Focus Timer Logic
+|
 ├── firebase.js       # Cloud Storage & Auth Integration
+|
 ├── service-worker.js # PWA Offline functionality
+|
 └── assets/           # App branding and icons
 
 
@@ -66,10 +75,11 @@ Safe Data Loading: A merge strategy ensures that even when I update the app feat
 LinkedIn: https://www.linkedin.com/in/deepak-kumar-jha-390694281/
 
 
-📈 Future Roadmap
--- AI Study Buddy: Integrate Gemini API to suggest study schedules based on course difficulty.
 
--- Leaderboards: Global rankings to compete with other students.
+📈 Future Roadmap
+- AI Study Buddy: Integrate Gemini API to suggest study schedules based on course difficulty.
+
+- Leaderboards: Global rankings to compete with other students.
 
 -- Enhanced Analytics: Detailed charts showing peak focus hours.
 
