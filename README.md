@@ -1,9 +1,11 @@
 🎓 Achieve-mate: Your Personal Gamified Study Ecosystem
 Stop planning, start achieving. A high-performance productivity tool for the modern student.
 
+
 Achieve-mate is a specialized web application designed to help students stay consistent with their learning goals. By blending behavioral psychology with gamification, it transforms the often-isolated experience of self-study into a rewarding journey.
 
 🔗 Live Demo: https://achieve-mate.netlify.app/
+
 
 💡 Why I Built This
 As an Engineering student, I noticed a recurring problem: it is incredibly easy to lose track of progress when self-studying complex subjects like Data structures or engineering syllabus.
@@ -18,6 +20,7 @@ The Consistency Drop: Without immediate rewards, long-term habits are hard to ma
 
 
 ✨ Key Features
+
 🎮 Gamified Progression: Earn XP for completing daily goals and lectures. Level up and unlock 17 unique badges.
 
 ⏱️ Deep Work Focus Mode: A full-screen Pomodoro timer featuring Pause/Resume logic and task-specific tracking.
@@ -29,6 +32,7 @@ The Consistency Drop: Without immediate rewards, long-term habits are hard to ma
 📱 PWA Ready: Installable on Android and iOS for a seamless, native app-like experience.
 
 ☁️ Cloud Sync: Secure login and real-time data persistence powered by Firebase.
+
 
 🛠️ Technical Stack
 Frontend: HTML5, CSS3 (Modern Flex/Grid), Vanilla JavaScript (ES6+).
@@ -47,18 +51,20 @@ Morning Prompt: To build discipline, the app checks every morning if you've set 
 
 Safe Data Loading: A merge strategy ensures that even when I update the app features, your existing progress is never lost.
 
+
 📂 Project Structure
 
-├── index.html        # Main UI structure and modal definitions
-├── style.css         # Custom dark-themed UI and responsive layouts
-├── app.js            # Core logic: XP system, goals, and focus timer
-├── firebase.js       # Firebase config, Auth, and Cloud sync logic
-├── service-worker.js # PWA offline capabilities
-├── manifest.json     # Web app install metadata
-└── assets/           # App icons and branding
+├── index.html        # Core Dashboard & Modal UI
+├── style.css         # Responsive Dark-themed Design
+├── app.js            # XP System & Focus Timer Logic
+├── firebase.js       # Cloud Storage & Auth Integration
+├── service-worker.js # PWA Offline functionality
+└── assets/           # App branding and icons
 
-👤 About the Developer
+
+👤 Developer
 LinkedIn: https://www.linkedin.com/in/deepak-kumar-jha-390694281/
+
 
 📈 Future Roadmap
 -- AI Study Buddy: Integrate Gemini API to suggest study schedules based on course difficulty.
