@@ -54,23 +54,6 @@ Morning Prompt: To build discipline, the app checks every morning if you've set 
 Safe Data Loading: A merge strategy ensures that even when I update the app features, your existing progress is never lost.
 
 
-
-📂 Project Structure
-
-
-├── index.html        # Core Dashboard & Modal UI
-|
-├── style.css         # Responsive Dark-themed Design
-|
-├── app.js            # XP System & Focus Timer Logic
-|
-├── firebase.js       # Cloud Storage & Auth Integration
-|
-├── service-worker.js # PWA Offline functionality
-|
-└── assets/           # App branding and icons
-
-
 👤 Developer
 LinkedIn: https://www.linkedin.com/in/deepak-kumar-jha-390694281/
 
