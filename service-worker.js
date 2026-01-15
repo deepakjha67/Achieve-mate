@@ -2,7 +2,11 @@ const CACHE_NAME = 'achieve-mate-v1';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
-    '/manifest.json'
+    '/manifest.json',
+    '/style.css',
+    '/app.js',
+    '/icon-192.png',
+    '/icon-512.png'
 ];
 
 // 1. INSTALL: Cache Core Files
@@ -43,7 +47,7 @@ self.addEventListener('fetch', (event) => {
 
     // Skip caching for Firebase/Google APIs to let the JS SDK handle its own persistence
     const url = new URL(event.request.url);
-    if (url.origin.includes('firestore.googleapis.com') || 
+    if (url.origin.includes('firestore.googleapis.com') ||
         url.origin.includes('identitytoolkit.googleapis.com')) {
         return;
     }
@@ -63,15 +67,9 @@ self.addEventListener('fetch', (event) => {
                 }
 
                 // Optional: Clone the response and push to cache for dynamic caching
-                // const responseToCache = networkResponse.clone();
-                // caches.open(CACHE_NAME).then((cache) => {
-                //     cache.put(event.request, responseToCache);
-                // });
-
+                // Only if it's not an API call
                 return networkResponse;
             }).catch(() => {
-                // Offline and not in cache? 
-                // You could return a custom offline.html here if you made one
                 console.log('[Service Worker] Fetch failed; returning offline page instead.', event.request.url);
             });
         })
