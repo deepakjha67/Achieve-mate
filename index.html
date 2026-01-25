@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Achieve-mate">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <title>Achieve-mate</title>
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+   
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="icon" type="image/png" href="icon-192.png">
+
+   
+    <link rel="manifest" href="manifest.json">
+
+  
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+   
+    <div id="initial-loader">
+        <div class="spinner"></div>
+        <div style="margin-top:20px; font-weight:600; color:var(--text-muted);">Loading Achieve-mate...</div>
+    </div>
+
+   
+    <div id="toast-container"></div>
+
+   
+    <div id="pwa-install-modal" class="modal-overlay">
+        <div class="modal-box" style="text-align:center;">
+            <button class="btn-icon-only"
+                onclick="document.getElementById('pwa-install-modal').classList.remove('active')"
+                style="position:absolute; top:15px; right:15px;">✕</button>
+            <div class="install-guide-content">
+                <div class="install-guide-icon"><i class="fas fa-download"></i></div>
+                <h2 style="font-family:var(--font-heading); margin-bottom:0.5rem;">Install App</h2>
+                <p style="color:var(--text-muted); margin-bottom:1.5rem;">Install Achieve-mate for the best experience.
+                </p>
+
+                <div id="pwa-android-btn" style="display:none;">
+                    <button class="btn btn-primary" style="width:100%" onclick="window.triggerInstall()">Install
+                        App</button>
+                </div>
+
+                <div id="pwa-ios-guide" style="display:none;">
+                    <div class="install-steps">
+                        <div class="step-row">1. Tap the <strong>Share</strong> button <span class="step-icon"><i
+                                    class="fas fa-share-square"></i></span></div>
+                        <div class="step-row">2. Scroll down and select <span class="step-icon"><i
+                                    class="fas fa-plus-square"></i></span> <strong>Add to Home Screen</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+    <div id="deleteAccountModal" class="modal-overlay">
+        <div class="modal-box" style="text-align:center; max-width: 400px;">
+            <div style="font-size: 3rem; color: var(--danger); margin-bottom: 1rem;"><i
+                    class="fas fa-exclamation-triangle"></i></div>
+            <h2 style="font-family: var(--font-heading); margin-bottom: 0.5rem;">Delete Account?</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                This action is permanent. All your progress, goals, and data will be wiped immediately. <br><br>
+                <strong>Are you sure?</strong>
+            </p>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-secondary" style="flex:1"
+                    onclick="closeModal('deleteAccountModal')">Cancel</button>
+                <button class="btn btn-danger" style="flex:1" onclick="confirmDeleteAccount()">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+   
+    <div id="welcome-overlay" class="modal-overlay">
+        <div class="modal-box modal-lg">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h2 style="color: var(--primary); font-family: var(--font-heading); font-size: 1.8rem;">Welcome to
+                    Achieve-mate</h2>
+                <p style="color: var(--text-muted);">Your personal productivity companion</p>
+            </div>
+            <div class="guide-step">
+                <div class="guide-icon"><i class="fas fa-chart-pie"></i></div>
+                <div>
+                    <h4 style="font-family:var(--font-heading)">Dashboard</h4>
+                    <p style="color:var(--text-muted); font-size:0.9rem;">View your daily progress, consistency streaks,
+                        and quick stats.</p>
+                </div>
+            </div>
+            <div class="guide-step">
+                <div class="guide-icon"><i class="fas fa-play-circle"></i></div>
+                <div>
+                    <h4 style="font-family:var(--font-heading)">Courses & Playlists</h4>
+                    <p style="color:var(--text-muted); font-size:0.9rem;">Create learning playlists, track video
+                        progress, and manage your studies.</p>
+                </div>
+            </div>
+            <button class="btn btn-primary" style="width: 100%; padding: 1rem;" onclick="closeWelcomeGuide()">Get
+                Started</button>
+        </div>
+    </div>
+
+   
+    <div id="manageGoalsModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="card-title">
+                <div class="card-title-group"><i class="fas fa-tasks"></i> Manage Today's Goals</div>
+                <button class="btn-icon-only" onclick="closeModal('manageGoalsModal')">✕</button>
+            </div>
+            <div style="display: flex; gap: 10px; margin-bottom: 1.5rem;">
+                <input type="text" id="newGoalInput" placeholder="Add a new task...">
+                <button class="btn btn-primary" onclick="addGoal()">Add</button>
+            </div>
+            <div id="manageGoalsList"></div>
+        </div>
+    </div>
+
+   
+    <div id="morningPromptModal" class="modal-overlay">
+        <div class="modal-box" style="text-align:center;">
+            <div style="margin-bottom:1.5rem; color:var(--accent); font-size:3rem;"><i class="fas fa-sun"></i></div>
+            <h2 style="font-family:var(--font-heading); margin-bottom:0.5rem;">Ready for Today?</h2>
+            <p style="color:var(--text-muted); margin-bottom:1.5rem;">You haven't set any goals for today yet. Set a
+                goal now to keep your streak alive!</p>
+           
+            <button class="btn btn-primary" style="width:100%"
+                onclick="closeModal('morningPromptModal'); openModal('manageGoalsModal');">Set
+                a Goal</button>
+            <button class="btn btn-secondary" style="width:100%; margin-top:10px;"
+                onclick="closeModal('morningPromptModal')">Later</button>
+        </div>
+    </div>
+
+   
+    <div id="addPlaylistModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="card-title">
+                <div class="card-title-group"><i class="fas fa-plus"></i> Add New Course</div>
+                <button class="btn-icon-only" onclick="closeModal('addPlaylistModal')">✕</button>
+            </div>
+            <form id="addCourseForm" onsubmit="savePlaylist(event)">
+                <div class="input-group">
+                    <label>Course Name</label>
+                    <input type="text" id="plName" required placeholder="e.g., Machine Learning A-Z">
+                </div>
+                <div class="input-group">
+                    <label>Source (Platform)</label>
+                    <select id="plSource">
+                        <option value="Udemy">Udemy</option>
+                        <option value="YouTube">YouTube</option>
+                        <option value="Coursera">Coursera</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Course Link (Optional)</label>
+                    <input type="url" id="plLink" placeholder="https://...">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 1.2rem;">
+                    <div class="input-group" style="margin-bottom:0;">
+                        <label>Total Lectures (Auto-generate)</label>
+                        <input type="number" id="genCountAdd" placeholder="e.g. 50"
+                            oninput="autoGenerateLectures('genCountAdd', 'plVideos')">
+                    </div>
+                    <div class="input-group" style="margin-bottom:0;">
+                        <label>Topic List (Editable)</label>
+                        <textarea id="plVideos" rows="5" placeholder="Lecture 1..."></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width:100%">Create Course</button>
+            </form>
+        </div>
+    </div>
+
+   
+    <div id="editPlaylistModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="card-title">
+                <div class="card-title-group"><i class="fas fa-edit"></i> Edit Course</div>
+                <button class="btn-icon-only" onclick="closeModal('editPlaylistModal')">✕</button>
+            </div>
+            <input type="hidden" id="editPlId">
+            <div class="input-group">
+                <label>Course Name</label>
+                <input type="text" id="editPlName">
+            </div>
+            <div class="input-group">
+                <label>Course Link</label>
+                <input type="url" id="editPlLink">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 1.2rem;">
+                <div class="input-group" style="margin-bottom:0;">
+                    <label>Total Lectures (Auto-generate)</label>
+                    <input type="number" id="genCountEdit" placeholder="e.g. 50"
+                        oninput="autoGenerateLectures('genCountEdit', 'editPlVideos')">
+                </div>
+                <div class="input-group" style="margin-bottom:0;">
+                    <label>Topic List (Editable)</label>
+                    <textarea id="editPlVideos" rows="5"></textarea>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-primary" style="flex:1" onclick="updatePlaylist()">Save Changes</button>
+                <button class="btn btn-danger" onclick="deletePlaylist()"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>
+    </div>
+
+  
+    <div id="focus-overlay" class="modal-overlay" style="background: #0f172a; z-index: 2000;">
+        <div style="text-align: center;">
+            <div style="font-size: 1.5rem; color: var(--text-muted); margin-bottom: 1rem;">Focusing on</div>
+            <h1 id="overlayTask"
+                style="font-size: 2.5rem; margin-bottom: 3rem; font-family: var(--font-heading); word-break: break-word; padding: 0 1rem;">
+                Deep Work</h1>
+            <div id="overlayTimer"
+                style="font-size: 6rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--primary); margin-bottom: 3rem;">
+                25:00</div>
+
+            <div style="display: flex; justify-content: center; gap: 20px;">
+                <button id="focusPauseBtn" class="btn btn-warning" onclick="toggleFocusPause()"
+                    style="padding: 1rem 3rem; font-size: 1.2rem; border-radius: 50px;">Pause</button>
+                <button class="btn btn-danger" onclick="stopFullScreenFocus()"
+                    style="padding: 1rem 3rem; font-size: 1.2rem; border-radius: 50px;">Stop</button>
+            </div>
+        </div>
+    </div>
+
+   
+    <div id="verification-modal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 420px; padding: 2rem;">
+            <div class="verify-modal-content">
+                <div class="verify-icon">
+                    <i class="fas fa-envelope"></i>
+                    <div class="verify-badge">1</div>
+                </div>
+                <h2 style="font-family: var(--font-heading); margin-bottom: 0.5rem; color: white;">Check your email</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">
+                    We've sent a verification link to your email address. Please verify your account to log in.
+                </p>
+
+                <div class="spam-warning">
+                    <i class="fas fa-exclamation-circle"></i> Check your spam folder
+                </div>
+
+                <button class="btn btn-primary" onclick="window.closeVerificationModal()" style="width: 100%;">Back to
+                    Login</button>
+
+                <div class="verify-footer">
+                    If you did not receive an email then please <a href="#" onclick="window.handleAuth(null)">try
+                        again</a> or <a href="mailto:achievemate.app@gmail.com">contact us</a>.
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+    <div id="auth-overlay">
+        <div class="auth-container">
+           
+            <button class="auth-close-btn" onclick="document.getElementById('auth-overlay').style.display='none'"
+                aria-label="Skip authentication">
+                Skip
+            </button>
+            <h2 style="margin-bottom: 0.5rem; color: var(--primary); font-family: var(--font-heading);">Achieve-Mate
+            </h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Your Personal Study Tracker
+            </p>
+
+            <div class="auth-tabs" id="authTabsContainer">
+                <div class="tab-slider"></div>
+                <div class="auth-tab" id="tab-login" onclick="toggleAuthMode('login')">Login</div>
+                <div class="auth-tab active" id="tab-signup" onclick="toggleAuthMode('signup')">Create Account</div>
+            </div>
+
+            <form id="auth-form" onsubmit="handleAuth(event)" novalidate>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="auth-email" placeholder="Enter Your Email Address" required>
+                    <i class="fas fa-envelope input-icon"></i>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="auth-password" placeholder="••••••••" required>
+                        <i class="fas fa-lock input-icon"></i>
+                        <i class="fas fa-eye password-toggle" id="togglePassword"
+                            onclick="window.togglePasswordVisibility()"></i>
+                    </div>
+                </div>
+
+                <div style="text-align:right; margin-bottom:1.5rem;" id="forgot-pass-container">
+                    <button type="button" onclick="window.handleResetPassword()"
+                        style="background:none; border:none; font-size:0.85rem; color:var(--primary); cursor:pointer; font-weight:500;">Forgot
+                        Password?</button>
+                </div>
+
+                <button type="submit" class="auth-btn-submit" id="auth-btn">Login</button>
+            </form>
+
+            <div id="switch-to-signup" class="auth-bottom-link" style="display:block;">
+                Don't have an account? <a onclick="toggleAuthMode('signup')">Create One</a>
+            </div>
+            <div id="switch-to-login" class="auth-bottom-link" style="display:none;">
+                Already have an account? <a onclick="toggleAuthMode('login')">Login</a>
+            </div>
+        </div>
+    </div>
+
+   
+    <nav class="mobile-nav">
+        <div class="mobile-nav-item active" id="mob-dashboard" onclick="switchTab('dashboard')"><i
+                class="fas fa-home"></i><span>Home</span></div>
+        <div class="mobile-nav-item" id="mob-courses" onclick="switchTab('courses')"><i
+                class="fas fa-book"></i><span>Courses</span></div>
+        <div class="mobile-nav-item" id="mob-focus" onclick="switchTab('focus')"><i
+                class="fas fa-clock"></i><span>Focus</span></div>
+        <div class="mobile-nav-item" id="mob-achievements" onclick="switchTab('achievements')"><i
+                class="fas fa-trophy"></i><span>Awards</span></div>
+        <div class="mobile-nav-item" id="mob-profile" onclick="switchTab('profile')"><i
+                class="fas fa-user"></i><span>Profile</span></div>
+    </nav>
+
+    <div class="app-wrapper" id="appWrapper">
+        <aside class="sidebar">
+            <div class="brand"><i class="fas fa-graduation-cap"></i><span>Achieve-mate</span></div>
+            <div class="nav-item active" id="nav-dashboard" onclick="switchTab('dashboard')"><i
+                    class="fas fa-chart-pie"></i> Dashboard</div>
+            <div class="nav-item" id="nav-courses" onclick="switchTab('courses')"><i class="fas fa-play-circle"></i> My
+                Courses</div>
+            <div class="nav-item" id="nav-focus" onclick="switchTab('focus')"><i class="fas fa-stopwatch"></i> Focus
+                Mode</div>
+            <div class="nav-item" id="nav-achievements" onclick="switchTab('achievements')"><i
+                    class="fas fa-trophy"></i> Achievements</div>
+            <div class="nav-item" id="nav-profile" onclick="switchTab('profile')"><i class="fas fa-user-circle"></i>
+                Profile</div>
+
+            <div class="sidebar-footer">
+                <div>Contact Developer</div>
+                <a href="https://www.linkedin.com/in/deepak-kumar-jha-390694281/" target="_blank" class="creator-link">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="page-header">
+                <div class="header-left">
+                    <div class="greeting">
+                        <h1 id="greetingText">Good Morning!</h1>
+                        <p id="dateDisplay" style="color:var(--text-muted); font-size:0.9rem;">Loading...</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                  
+                    <button id="headerLoginBtn" class="header-login-btn" onclick="openAuthModal('login')"
+                        style="display:none;">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+
+                    <div id="headerUserBadge" class="user-badge-header" onclick="switchTab('profile')"
+                        style="display:none;">
+                        <div class="user-badge-avatar" id="headerUserInitials">U</div>
+                        <div class="user-badge-name" id="headerUserName">User</div>
+                    </div>
+
+                    <div class="streak-badge" onclick="switchTab('profile')">
+                        <i class="fas fa-fire" style="color: var(--accent)"></i>
+                        <div class="streak-count" id="headerStreak">0</div>
+                    </div>
+                </div>
+            </header>
+
+          
+            <div id="dashboard-view" class="view-section">
+                <div class="grid-dashboard">
+                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <div class="card"
+                            style="background: var(--bg-card); border: 1px solid var(--primary); color: white;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div
+                                        style="font-size: 0.8rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; color: var(--primary);">
+                                        Current Level</div>
+                                    <div style="font-size: 2rem; font-weight: 700; font-family: var(--font-heading);"
+                                        id="dashboardLevelDisplay">1</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 0.9rem; font-weight: 600;" id="dashboardXPDisplay">0 XP</div>
+                                    <div style="font-size: 0.75rem; opacity: 0.8; color: var(--text-muted);">Keep
+                                        pushing!</div>
+                                </div>
+                            </div>
+                            <div
+                                style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 10px; overflow: hidden;">
+                                <div id="dashboardLevelBar"
+                                    style="height: 100%; background: var(--primary); width: 0%; transition: width 1s ease;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-title">
+                                <div class="card-title-group">
+                                    <i class="fas fa-tasks"></i>
+                                    <span>Today's Goal</span>
+                                </div>
+                              
+                                <button class="btn-icon-only" onclick="openModal('manageGoalsModal')"><i
+                                        class="fas fa-pencil-alt"></i></button>
+                            </div>
+                            <div id="dashboardGoalsList"></div>
+                            <div id="emptyGoalsMsg"
+                                style="text-align:center; color:var(--text-muted); padding:1rem; font-size:0.9rem; display:none;">
+                                No tasks set. Tap the pencil to add.</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">
+                                <div class="card-title-group"><i class="fas fa-chart-bar"></i> 7-Day Consistency</div>
+                            </div>
+                            <div class="graph-container" id="consistencyGraph"></div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <div class="card">
+                            <div class="card-title">
+                                <div class="card-title-group"><i class="fas fa-chart-line"></i> Progress</div>
+                            </div>
+                            <div
+                                style="display: flex; justify-content: space-around; text-align: center; padding: 10px 0;">
+                                <div style="cursor: pointer;" onclick="switchTab('courses')">
+                                    <div style="font-size: 2rem; font-weight: 700; color: var(--accent);" id="topicPct">
+                                        0%</div>
+                                    <div style="font-size: 0.9rem; color: var(--text-muted);">Courses</div>
+                                </div>
+                                <div style="cursor: pointer;" onclick="openModal('manageGoalsModal')">
+                                    <div style="font-size: 2rem; font-weight: 700; color: var(--accent);" id="goalPct">
+                                        0%</div>
+                                    <div style="font-size: 0.9rem; color: var(--text-muted);">Goals</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card" onclick="switchTab('achievements')"
+                            style="cursor:pointer; background: linear-gradient(135deg, var(--bg-card), rgba(251, 191, 36, 0.1)); border-color: rgba(251, 191, 36, 0.3);">
+                            <div class="card-title" style="color: var(--accent);">
+                                <div class="card-title-group"><i class="fas fa-crown"></i> Recent Victory</div>
+                            </div>
+                            <div id="recentBadgeContent">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          
+            <div id="courses-view" class="view-section" style="display: none;">
+                <div class="card">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2 style="font-family: var(--font-heading); font-size: 1.25rem;">Learning Playlists</h2>
+                      
+                        <button class="btn btn-primary btn-sm" onclick="openModal('addPlaylistModal')"><i
+                                class="fas fa-plus"></i>
+                            Add Course</button>
+                    </div>
+
+                    <div class="search-wrapper" style="margin-bottom: 1rem; position: relative;">
+                        <i class="fas fa-search"
+                            style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                        <input type="text" id="courseSearch" placeholder="Search courses..." oninput="renderPlaylists()"
+                            style="padding-left: 40px; background: var(--bg-body); border: 1px solid var(--border); border-radius: 20px;">
+                    </div>
+
+                    <div class="course-filter-container">
+                        <button class="course-tab active" onclick="filterCourses('all', this)">All</button>
+                        <button class="course-tab" onclick="filterCourses('active', this)">In Progress</button>
+                        <button class="course-tab" onclick="filterCourses('completed', this)">Completed</button>
+                    </div>
+                    <div id="playlistsContainer" class="courses-grid"></div>
+                </div>
+            </div>
+
+           
+            <div id="focus-view" class="view-section" style="display: none;">
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title" style="justify-content: center;">Focus Session</div>
+                        <input type="text" id="focusTaskInput" placeholder="What are you working on?"
+                            style="text-align: center; margin-bottom: 1.5rem;">
+                        <label
+                            style="display:block; text-align:center; color:var(--text-muted); margin-bottom:0.5rem;">Duration
+                            (Minutes)</label>
+                        <input type="number" id="customFocusTime" value="25"
+                            style="text-align:center; margin-bottom:1rem; width:80px; margin-left:auto; margin-right:auto; display:block;">
+                        <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 1.5rem;">
+                            <button class="btn btn-secondary btn-sm"
+                                onclick="document.getElementById('customFocusTime').value=25">25m</button>
+                            <button class="btn btn-secondary btn-sm"
+                                onclick="document.getElementById('customFocusTime').value=45">45m</button>
+                            <button class="btn btn-secondary btn-sm"
+                                onclick="document.getElementById('customFocusTime').value=60">60m</button>
+                        </div>
+                       
+                        <button class="btn btn-primary" style="width:100%" onclick="startFullScreenFocus()">Start
+                            Focus</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">
+                            <div class="card-title-group">Recent Sessions</div>
+                        </div>
+                        <div id="focusHistoryList" style="max-height: 300px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+            </div>
+
+           
+            <div id="achievements-view" class="view-section" style="display: none;">
+                <div class="card">
+                    <div class="card-title">
+                        <div class="card-title-group">Badges & Milestones</div>
+                        <span id="badgeCount" style="color:var(--accent)">0 / 17</span>
+                    </div>
+                    <div class="ach-filters">
+                        <button class="ach-filter-btn active" onclick="filterBadges('all', this)">All</button>
+                        <button class="ach-filter-btn" onclick="filterBadges('streak', this)">Streak</button>
+                        <button class="ach-filter-btn" onclick="filterBadges('playlist', this)">Courses</button>
+                        <button class="ach-filter-btn" onclick="filterBadges('focus', this)">Focus</button>
+                    </div>
+                    <div class="achievements-grid" id="achievementsGrid"></div>
+                </div>
+            </div>
+
+         
+            <div id="profile-view" class="view-section" style="display: none;">
+                <div class="card"
+                    style="display:flex; align-items:center; gap:1.5rem; background: linear-gradient(to right, var(--bg-card), rgba(99,102,241,0.1));">
+                    <div style="width:70px; height:70px; border-radius:50%; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:700; flex-shrink:0;"
+                        id="profilePic">U</div>
+                    <div style="overflow: hidden;">
+                        <h2 id="profileName" style="line-height:1.2; font-size:1.2rem; word-wrap: break-word;">Guest
+                            User</h2>
+                        <p id="profileEmail" style="color:var(--text-muted); font-size:0.9rem; word-wrap: break-word;">
+                            Not logged in</p>
+                        <p id="verificationStatus" style="color:var(--accent); font-size:0.8rem; display:none;">Email
+                            not verified</p>
+                    </div>
+                </div>
+
+             
+                <div class="level-container" style="text-align:center;">
+                    <div class="level-circle-container">
+                        <div class="level-circle">
+                            <svg viewBox="0 0 100 100">
+                                <circle class="level-circle-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="level-circle-fg" id="levelCircleFg" cx="50" cy="50" r="45"></circle>
+                            </svg>
+                            <div class="level-circle-content">
+                                <div class="level-number-large" id="levelTitle">1</div>
+                                <div class="level-label-small">LEVEL</div>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 style="margin-bottom:5px; color:var(--primary);" id="xpDisplay">0 XP</h3>
+                    <p class="xp-text" id="xpToNext">500 XP to Level 2</p>
+                    <p class="xp-text" id="motivationalQuote"
+                        style="margin-top:10px; font-style:italic; color:var(--text-main);">Keep growing!</p>
+                </div>
+
+                <div class="grid-profile">
+                    <div class="card">
+                        <div class="cal-header">
+                            <button class="btn-icon-only btn-sm" onclick="changeMonth(-1)"><i
+                                    class="fas fa-chevron-left"></i></button>
+                            <span id="calMonthYear"></span>
+                            <button class="btn-icon-only btn-sm" onclick="changeMonth(1)"><i
+                                    class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="cal-grid" id="calGrid"></div>
+                        <div style="margin-top:1rem; font-size:0.8rem; color:var(--text-muted); text-align:center;">
+                            Select date to view activity</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">
+                            <div class="card-title-group">Activity Log <span id="selectedDateDisplay"
+                                    style="font-size:0.9rem; color:var(--primary)">Today</span></div>
+                        </div>
+                        <div id="activityLogContainer" style="height:300px; overflow-y:auto;">
+                            <div style="text-align:center; padding:2rem; color:var(--text-muted);">Click a date on the
+                                calendar to view details.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <div class="card-title-group">Account Settings</div>
+                    </div>
+                    <div class="settings-grid">
+                       
+                        <button class="btn btn-primary" id="profileLoginBtn" style="display:none;"
+                            onclick="openAuthModal('login')"><i class="fas fa-sign-in-alt"></i> Login to Sync</button>
+
+                        <button class="btn btn-secondary" onclick="enableNotifications()"><i class="fas fa-bell"></i>
+                            Reminders</button>
+                        <button class="btn btn-secondary" onclick="exportData()"><i class="fas fa-download"></i>
+                            Export</button>
+                       
+                        <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()"><i
+                                class="fas fa-upload"></i> Import</button>
+                        <button class="btn btn-secondary"
+                            onclick="document.getElementById('welcome-overlay').classList.add('active')"><i
+                                class="fas fa-question-circle"></i> Guide</button>
+                        <button class="btn btn-secondary"
+                            onclick="if(confirm('Clear all local data?')) { localStorage.clear(); location.reload(); }"><i
+                                class="fas fa-trash"></i> Reset</button>
+                        <button class="btn btn-secondary"
+                            onclick="window.location.href='mailto:achievemate.app@gmail.com'"><i class="fas fa-bug"></i>
+                            Report</button>
+                        <button class="btn btn-secondary"
+                            onclick="window.open('https://www.linkedin.com/in/deepak-kumar-jha-390694281/', '_blank')"><i
+                                class="fab fa-linkedin"></i> Dev</button>
+
+                        <button class="btn btn-danger" id="deleteAccountBtn" onclick="openModal('deleteAccountModal')"
+                            style="display:none;"><i class="fas fa-user-times"></i> Delete Account</button>
+
+                        <button class="btn btn-danger" id="logoutBtn" style="display:none;"
+                            onclick="window.logoutUser()">Logout</button>
+                    </div>
+                  
+                    <input type="file" id="importFile" style="display: none;" accept=".json,application/json,text/plain"
+                        onchange="importData(this)">
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+   
+    <script type="module" src="firebase.js"></script>
+    <script src="app.js" defer></script>
+</body>
+
+</html>
